@@ -1,3 +1,6 @@
+import { Config } from "./classes/Config.js";
+import { Entity } from "./classes/Entity.js";
+
 const cnv = document.getElementById('canvas');
 const ctx = cnv.getContext('2d');
 
