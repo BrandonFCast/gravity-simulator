@@ -1,3 +1,5 @@
+import { Config } from "./Config.js";
+
 export class Entity {
     static entities = [];
     static currentID = 0;
@@ -15,11 +17,16 @@ export class Entity {
     }
 
     update() {
-        this.draw(this.ctx);
+        this.applyForces();
+        this.draw(Config.ctx);
     }
 
     draw() {
         console.log("this entity is not drawable")
+    }
+
+    applyForces() {
+        console.log("this entity has no function applyForces")
     }
 
 }

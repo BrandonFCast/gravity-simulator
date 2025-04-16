@@ -1,13 +1,20 @@
 export class Config {
+
+    static ctx = null;
+
     constructor(options = {}) {
-        this.ctx = options.ctx;
+        if (!options) return;
+        this.gravityForce = options.gravityForce;
     }
 
     setCtx(ctx) {
-        this.ctx = ctx;
+        Config.ctx = ctx;
+    }
+    setGravityForce(gravityForce) {
+        this.gravityForce = gravityForce;
     }
 
     isValid() {
-        return this.ctx !== null;
+        return this.ctx !== null && this.gravityForce !== null;
     }
 }
