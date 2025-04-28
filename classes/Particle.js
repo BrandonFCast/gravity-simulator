@@ -1,13 +1,13 @@
 import { Entity } from "./Entity.js";
 
 export class Particle extends Entity {
-    constructor({ x, y, radius = 10, color = 'red' }) {
-        super();
-        this.x = x;
-        this.y = y;
+    constructor({ x, y, radius = 10, color = 'red', mass = 1, debugMode = false, debugColor = 'white' }) {
+        super({ mass, x, y });
         this.radius = radius;
         this.color = color;
-        this.moveVector = { angle: 0, force: 0 }
+        this.points = [];
+        this.debugMode = debugMode;
+        this.debugColor = debugColor;
     }
 
     draw(ctx) {
@@ -16,42 +16,29 @@ export class Particle extends Entity {
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();
         ctx.closePath();
-    }
-
-    addForce({ angle = 0, force = 10 }) {
-        const vector = sumForces(this.moveVector.force, this.moveVector.angle, force, angle);
-
-        this.moveVector.angle = vector.angle;
-        this.moveVector.force = vector.force;
+        if (!this.debugMode) return;
+        ctx.strokeStyle = this.debugColor;
+        for (let i = 0; i < this.points.length - 1; i++) {
+            const current = this.points[i];
+            const next = this.points[i + 1];
+            ctx.beginPath();
+            ctx.moveTo(current.x, current.y);
+            ctx.lineTo(next.x, next.y);
+            ctx.stroke();
+        }
     }
 
     applyForces() {
         const rads = this.moveVector.angle * (Math.PI / 180);
 
-        const dx = Math.cos(rads) * this.moveVector.force;
-        const dy = Math.sin(rads) * this.moveVector.force;
+        const a = this.moveVector.force / this.mass;
+
+        const dx = Math.cos(rads) * a;
+        const dy = Math.sin(rads) * a;
 
         this.x += dx;
         this.y += dy;
+        this.points.push({ x: this.x, y: this.y });
     }
 
-}
-
-const sumForces = (f1, a1, f2, a2) => {
-    const rads1 = a1 * (Math.PI / 180);
-    const rads2 = a2 * (Math.PI / 180);
-
-    const fx1 = Math.cos(rads1) * f1;
-    const fy1 = Math.sin(rads1) * f1;
-
-    const fx2 = Math.cos(rads2) * f2;
-    const fy2 = Math.sin(rads2) * f2;
-
-    const fxTotal = fx1 + fx2;
-    const fyTotal = fy1 + fy2;
-
-    const totalForce = Math.sqrt(fxTotal ** 2 + fyTotal ** 2);
-    const totalAngle = Math.atan2(fyTotal, fxTotal) * 180 / Math.PI;
-
-    return { force: totalForce, angle: totalAngle };
 }
