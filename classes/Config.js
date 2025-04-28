@@ -13,8 +13,12 @@ export class Config {
     setGravityForce(gravityForce) {
         this.gravityForce = gravityForce;
     }
+    getGravityForce() {
+        return this.gravityForce;
+    }
 
     isValid() {
-        return this.ctx !== null && this.gravityForce !== null;
+        const value = Config.ctx !== null && this.gravityForce !== null;
+        return value;
     }
 }
